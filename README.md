@@ -1,6 +1,6 @@
-# Ядро Linux 6.6.18 для линейки принтеров Creality K1 на процессоре Ingenic X2000E
+# Linux kernel 6.6.18 for the Creality K1 printer series on the Ingenic X2000E processor
 
-## Компиляция
+## Compilation
 
 ```bash
 cd ~/work/mips-x2000e/linux
@@ -17,17 +17,17 @@ make ARCH=$ARCH CROSS_COMPILE=$CROSS_COMPILE -j$(nproc) modules
 make ARCH=$ARCH CROSS_COMPILE=$CROSS_COMPILE INSTALL_MOD_PATH=~/work/mips-x2000e/rootfs modules_install
 ```
 
-## Адреса загрузки ядра через uBoot
+## Kernel load addresses via U-Boot
 
 ```bash
-В меню Tera Term
+In the Tera Term menu
 File → Transfer → YMODEM → Send
 
 loady 0x80f00000
 bootm 0x80f00000
 ```
 
-## Запись модулей
+## Writing modules
 
 ```bash
 tar -czf modules-6.6.18+.tar.gz 6.6.18+
@@ -39,16 +39,16 @@ sudo tar -xvf modules.tar.gz -C /lib/modules/
 sudo depmod -a $(uname -r)
 ```
 
-## Бэкап ядра
+## Kernel backup
 
 ```bash
 sudo dd if=/home/printer/uImage of=/dev/mmcblk0p3
 ```
 
-## Запись ядра
+## Flashing the kernel
 
-Заполняем раздел p3 нулями и записываем новый образ поверх нулей.
-Синхронизация!
+Zero out partition p3 and write the new image over the zeros.
+Sync afterwards!
 
 ```bash
 sudo dd if=/dev/zero of=/dev/mmcblk0p3 bs=4K
@@ -56,10 +56,10 @@ sudo dd if=/home/printer/uImage of=/dev/mmcblk0p3
 sync
 ```
 
-## Драйвера wifi
+## Wi‑Fi drivers
 
-Прошивки нового wi-fi драйвера хранятся в /lib/firmware/brcm/
-
-Nvram нового драйвера можно взять в https://git.kernel.org/pub/scm/linux/kernel/git/firmware/linux-firmware.git/tree/brcm/brcmfmac43430-sdio.AP6212.txt
-
-Последнюю прошивку можно взять в https://github.com/Infineon/ifx-linux-firmware/tree/latest-v5.10/firmware
+- Firmware for the new Wi‑Fi driver is stored in /lib/firmware/brcm/
+- The NVRAM for the new driver can be taken from:
+  https://git.kernel.org/pub/scm/linux/kernel/git/firmware/linux-firmware.git/tree/brcm/brcmfmac43430-sdio.AP6212.txt
+- The latest firmware can be found at:
+  https://github.com/Infineon/ifx-linux-firmware/tree/latest-v5.10/firmware
